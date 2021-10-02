@@ -22,6 +22,7 @@ public class Controller2D : MonoBehaviour
 
     private SpriteRenderer spr;
     private Rigidbody2D rb;
+    private Animator anim;
 
     // default facing right
     private float faceDirection = 1;
@@ -36,25 +37,38 @@ public class Controller2D : MonoBehaviour
     public GameObject landParticleSystem;
     public GameObject jumpParticleSystem;
     public Transform particleSpawn;
+    public GameObject breakWingParticleSystem;
+
+    public float velocityToFall = 30;
+    private bool fall = false;
+    private bool bWings = false;
+
+    public Animator wingAnimator;
 
     private void Start()
     {
         spr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
         maxJumpCount = jumpCount;
     }
 
     public void Update()
     {
+        // TODO replace with actual input
         float x = Input.GetAxis("Horizontal");
         bool y = Input.GetButtonDown("Jump");
-        if (y && canJump && jumpCount > 0) Jump(x);
-        else if(x != 0) Move(x);
+        anim.SetFloat("x", Mathf.Abs(Input.GetAxisRaw("Horizontal")));
+        if (y && canJump && jumpCount > 0 && !fall) Jump(x);
+        else if(x != 0 && !fall) Move(x);
     }
 
     public void LateUpdate()
     {
         velocity = rb.velocity;
+        anim.SetBool("grounded", isGrounded);
+        if(jumpCount <= 0 && !bWings) { wingAnimator.SetBool("broken", true); SpawnParticles(breakWingParticleSystem, true); bWings = true; }
+        if(velocity.y < -velocityToFall) { anim.SetBool("fall", true); wingAnimator.SetBool("fall", true); }
         CollisionCheck();
     }
 
@@ -69,7 +83,12 @@ public class Controller2D : MonoBehaviour
         else isGrounded = false;
         if(isGrounded)
         {
-            jumpCount = maxJumpCount;            
+            jumpCount = maxJumpCount;
+            anim.SetBool("fall", false);
+            wingAnimator.SetBool("broken", false);
+            wingAnimator.SetBool("fall", false);
+            fall = false;
+            bWings = false;
         }
         if(isGrounded && !temp)
         {
@@ -87,6 +106,7 @@ public class Controller2D : MonoBehaviour
 
     public void Jump(float inputDir)
     {
+        anim.SetTrigger("jump");
         float xMult = inputDir, yMult = 0, x = 0, y = 0;
         yMult = (isGrounded ? groundJumpForce : airJumpForce);
         if (inputDir != 0)
@@ -109,6 +129,7 @@ public class Controller2D : MonoBehaviour
 
         rb.velocity = new Vector2(xMult, 0f);
         rb.AddForce(new Vector2(x, y));
+        wingAnimator.SetTrigger("flap");
         jumpCount--;
         SpawnParticles(jumpParticleSystem, true);
         if (isGrounded) SpawnParticles(takeoffParticleSystem);
