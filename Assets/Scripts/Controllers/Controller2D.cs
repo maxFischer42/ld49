@@ -64,6 +64,8 @@ public class Controller2D : MonoBehaviour
     public AudioClip breakWingSound;
     public AudioClip freeFallSound;
 
+    public bool isInCutscene = false;
+
     public void ResetJumps()
     {
         GenerateJumps();
@@ -82,6 +84,8 @@ public class Controller2D : MonoBehaviour
 
     public void Update()
     {
+        if (isInCutscene) return;
+        if (Time.timeScale == 0) return;
         if (rb.velocity.y > yCap) rb.velocity = new Vector2(rb.velocity.x, yCap);
         if (Mathf.Abs(rb.velocity.x) > xCap) rb.velocity = new Vector2(xCap * Mathf.Sign(rb.velocity.x), rb.velocity.y);
 
@@ -95,7 +99,9 @@ public class Controller2D : MonoBehaviour
 
     public void LateUpdate()
     {
-        if(freeFall)
+        if (isInCutscene) return;
+        if (Time.timeScale == 0) return;
+        if (freeFall)
         {
             if((Mathf.Abs(velocity.x) < 0.1) &&(Mathf.Abs(velocity.y) < 0.01)) { //On ice, basically not moving
                 IceSoftFix();
@@ -170,6 +176,8 @@ public class Controller2D : MonoBehaviour
 
     public void Move(float inputDir) // Move in the X direction
     {
+        if (isInCutscene) return;
+        if (Time.timeScale == 0) return;
         if (freeFall) return;
         float mult = (isGrounded ? groundSpeed : airSpeed);
         float x = inputDir * mult;     
@@ -179,6 +187,8 @@ public class Controller2D : MonoBehaviour
 
     public void Jump(float inputDir)
     {
+        if (isInCutscene) return;
+        if (Time.timeScale == 0) return;
         if (freeFall) return;
         anim.SetTrigger("jump");
         float xMult = inputDir, yMult = 0, x = 0, y = 0;
@@ -267,7 +277,16 @@ public class Controller2D : MonoBehaviour
         if (collision.gameObject.tag == "Ice") StartIce();
     }
 
-    void StartIce()
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Ice")
+        {
+            StartIce();
+            if (!freeFall) GameObject.Find("SFXSource").GetComponent<AudioSource>().PlayOneShot(freeFallSound);
+        }
+    }
+
+    public void StartIce()
     {
         isGrounded = false;
         box.enabled = false;

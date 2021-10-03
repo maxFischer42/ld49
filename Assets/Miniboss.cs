@@ -34,7 +34,17 @@ public class Miniboss : MonoBehaviour
     float sinTimer = 0f;
     public float sinMax = 3f;
     float sinDir = -1;
-    
+
+    float actionTimer = 0f;
+    float actionMax = 1f;
+    Vector2 actionTimerRange = new Vector2(1f, 2.5f);
+
+    public GameObject attackOnePrefab;
+    bool hasAttackedOnce = false;
+
+    public GameObject attackTwoPrefab;
+    bool hasAttackedTwice = false;
+
     // Don't let the boss escape these bounds in the x axis
     Vector2 bounds = new Vector2(-11, 11);
 
@@ -47,10 +57,16 @@ public class Miniboss : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sp = GetComponent<SpriteRenderer>();
+        GetComponent<MinibossHealth>().enabled = true;
     }
 
     void Update()
     {
+        actionTimer += Time.deltaTime;
+        if(actionTimer >= actionMax)
+        {
+            ResetState();
+        }
         HandleState();
     }
 
@@ -103,10 +119,14 @@ public class Miniboss : MonoBehaviour
 
     void ResetState()
     {
+        actionMax = Random.Range(actionTimerRange.x, actionTimerRange.y);
+        actionTimer = 0f;
         hoverTimer = 0f;
         sinTimer = 0f;
         target = -1;
-        state = mbState.idle;
+        hasAttackedOnce = false;
+        hasAttackedTwice = false;
+        state = (mbState)Random.Range(0, 5);
     }
 
     void Idle()
@@ -132,12 +152,19 @@ public class Miniboss : MonoBehaviour
 
     void AttackOne()
     {
-
+        if (hasAttackedOnce) return;
+        GameObject a = (GameObject)Instantiate(attackOnePrefab, transform);
+        hasAttackedOnce = true;
+        a.transform.parent = null;
+        Destroy(a, 10f);    
     }
 
     void AttackTwo()
     {
-
+        if (hasAttackedTwice) return;
+        GameObject a = (GameObject)Instantiate(attackTwoPrefab, transform);
+        hasAttackedTwice = true;
+        a.transform.parent = null;
     }
 
     void Move()

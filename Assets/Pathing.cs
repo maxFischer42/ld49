@@ -142,6 +142,7 @@ public class Pathing : MonoBehaviour
         rb.gravityScale = 0f;
         GetComponent<CapsuleCollider2D>().isTrigger = false;
         transform.position = transform.parent.position;
+        cN = 0;
         anim.SetBool("idle", true);
         anim.SetBool("fall", false);
     }

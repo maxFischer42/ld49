@@ -64,6 +64,11 @@ MonoBehaviour:
   offsetToNode: 0.1
   smoothDampTime: 0.3
   stompForce: 50
+  isAlive: 1
+  respawnEffect: {fileID: 0}
+  fadeSpeed: 0.5
+  timeToRespawn: 3
+  effectTime: 0.5
 --- !u!1 &3585828445804318458
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,6 +251,10 @@ PrefabInstance:
     - target: {fileID: 1760772765205448332, guid: de8ffd251fe5c8f4fa17e7e517729fca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1760772765333582863, guid: de8ffd251fe5c8f4fa17e7e517729fca, type: 3}
+      propertyPath: m_SortingOrder
+      value: -2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de8ffd251fe5c8f4fa17e7e517729fca, type: 3}
