@@ -31,8 +31,8 @@ public class Controller2D : MonoBehaviour
 
     public int minJumps = 2;
     public int jumpCount = 4;
-    private int minJumpCount;
-    private int maxJumpCount;
+    public int minJumpCount;
+    public int maxJumpCount;
 
     private BoxCollider2D box;
     private CircleCollider2D circle;
@@ -45,7 +45,7 @@ public class Controller2D : MonoBehaviour
     public Transform particleSpawn;
     public GameObject breakWingParticleSystem;
 
-    public float velocityToFall = 30;
+    public float velocityToFall = 50;
     private bool fall = false;
     private bool bWings = false;
 
@@ -71,6 +71,8 @@ public class Controller2D : MonoBehaviour
         GenerateJumps();
     }
 
+    Vector3 s;
+
     private void Start()
     {
         spr = GetComponent<SpriteRenderer>();
@@ -80,6 +82,7 @@ public class Controller2D : MonoBehaviour
         circle = GetComponent<CircleCollider2D>();
         maxJumpCount = jumpCount;
         minJumpCount = minJumps;
+        s = transform.position;
     }
 
     public void Update()
@@ -95,6 +98,7 @@ public class Controller2D : MonoBehaviour
         anim.SetFloat("x", Mathf.Abs(Input.GetAxisRaw("Horizontal")));
         if (y && canJump && jumpCount > 0 && !fall) Jump(x);
         else if(x != 0 && !fall) Move(x);
+        if (Input.GetKeyDown(KeyCode.Y)) transform.position = s;
     }
 
     public void LateUpdate()
@@ -197,6 +201,7 @@ public class Controller2D : MonoBehaviour
         if (inputDir != 0)
         {
             xMult = (isGrounded ? groundSpeed : airSpeed);
+            xMult *= faceDirection;
         }
         else // No input, jump higher
         {

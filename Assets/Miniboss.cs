@@ -111,12 +111,6 @@ public class Miniboss : MonoBehaviour
         }
     }
 
-    // Call this if the player loses the fight (falls beneath the stage)
-    public void ResetFight()
-    {
-        
-    }
-
     void ResetState()
     {
         actionMax = Random.Range(actionTimerRange.x, actionTimerRange.y);

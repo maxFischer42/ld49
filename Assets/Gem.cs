@@ -6,6 +6,7 @@ public class Gem : MonoBehaviour
 {
     public GameObject deathEffect;
     public AudioClip sfx;
+    public int count = 1;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -14,6 +15,7 @@ public class Gem : MonoBehaviour
             GameObject e = (GameObject)Instantiate(deathEffect, transform);
             e.transform.parent = null;
             GameObject.Find("SFXSource").GetComponent<AudioSource>().PlayOneShot(sfx);
+            GameObject.Find("GameManager").GetComponent<GameManager>().AddGem(count);
             Destroy(e, 0.2f);
             Destroy(gameObject);
 

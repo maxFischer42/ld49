@@ -54,8 +54,8 @@ public class Breakable : MonoBehaviour
     {
         anim.SetTrigger("Kill");
         isAlive = false;
-        GetComponent<BoxCollider2D>().isTrigger = true;
-        GetComponent<CircleCollider2D>().isTrigger = true;
+        GetComponent<BoxCollider2D>().enabled = false;
+        GetComponent<CircleCollider2D>().enabled = false;
         StartCoroutine(ResetEnemy());
     }
 
@@ -65,6 +65,7 @@ public class Breakable : MonoBehaviour
         anim.SetTrigger("Respawn");
         yield return new WaitForSeconds(effectTime);
         isAlive = true;
-        GetComponent<CircleCollider2D>().isTrigger = false;
+        GetComponent<BoxCollider2D>().enabled = true;
+        GetComponent<CircleCollider2D>().enabled = true;
     }
 }

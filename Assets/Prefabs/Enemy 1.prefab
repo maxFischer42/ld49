@@ -65,7 +65,7 @@ MonoBehaviour:
   smoothDampTime: 0.3
   stompForce: 50
   isAlive: 1
-  respawnEffect: {fileID: 0}
+  respawnEffect: {fileID: 2192011374207157161, guid: 514c087fc3dd43d4da236cf78a21a440, type: 3}
   fadeSpeed: 0.5
   timeToRespawn: 3
   effectTime: 0.5
@@ -200,6 +200,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3585828445804318459}
     m_Modifications:
+    - target: {fileID: 775838718562781550, guid: de8ffd251fe5c8f4fa17e7e517729fca, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1760772765205448321, guid: de8ffd251fe5c8f4fa17e7e517729fca, type: 3}
       propertyPath: m_Name
       value: Enemy

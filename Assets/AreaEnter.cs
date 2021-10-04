@@ -13,22 +13,34 @@ public class AreaEnter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "AreaEnter") EnterArea(collision.gameObject.name);
+        if (collision.gameObject.tag == "AreaEnter") EnterArea(collision.gameObject.name, collision.gameObject.GetComponent<SongHolder>().mySong);
     }
 
-    public void EnterArea(string s)
+    public void EnterArea(string s, AudioClip a)
     {
-        if(s != currentArea) StartCoroutine(DoFade(s));
+        if (s != currentArea)
+        {
+            t.enabled = true;
+            GameObject.Find("GameManager").GetComponent<Jukebox>().PlaySong(a);
+            StartCoroutine(DoFade(s));
+        }
     }
 
     IEnumerator DoFade(string s)
     {
         t.text = s;
+        StartCoroutine(d());
         StartCoroutine(FadeImage(false));
         yield return new WaitForSeconds(linger);
         StartCoroutine(FadeImage(true));
         t.color = new Color(1, 1, 1, 0);
         currentArea = s;
+    }
+
+    IEnumerator d()
+    {
+        yield return new WaitForSeconds(5f);
+        t.enabled = false;
     }
 
     IEnumerator FadeImage(bool fadeAway)
